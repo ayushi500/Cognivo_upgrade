@@ -1,0 +1,13 @@
+{
+  "name": "cognivo-ai-learning-assistant",
+  "private": true,
+  "type": "module",
+  "version": "2.0.0",
+  "description": "AI Learning Assistant - run everything with: npm start",
+  "scripts": {
+    "start": "node scripts/run.js",
+    "setup": "node scripts/run.js --setup-only",
+    "test": "npm test --prefix backend"
+  },
+  "engines": { "node": ">=20" }
+}
