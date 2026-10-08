@@ -299,11 +299,6 @@ Retrieval is restricted using the authenticated user's identity and requested do
 * LLM Reranking
 * OCR
 
-### Validation / Testing
-
-* Zod
-* Jest / project test suite
-
 ---
 
 ## 📁 High-Level Architecture

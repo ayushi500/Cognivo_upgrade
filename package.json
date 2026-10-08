@@ -9,5 +9,7 @@
     "setup": "node scripts/run.js --setup-only",
     "test": "npm test --prefix backend"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

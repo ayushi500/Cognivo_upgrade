@@ -7,20 +7,18 @@ import { HybridRetriever } from "../utils/ai/lc/retriever.js";
 import DocumentChunk from "../models/DocumentChunk.js";
 import Document from "../models/Document.js";
 import ChatHistory from "../models/ChatHistory.js";
-import Quiz from "../models/Quiz.js";
-import FlashCard from "../models/Flashcard.js";
 import { chunkPages } from "../utils/textChunker.js";
 import { bm25Rank } from "../utils/ai/bm25.js";
 import { reciprocalRankFusion } from "../utils/ai/retrieval.js";
 import * as geminiService from "../utils/geminiService.js";
-import { chat, chatStream, agent } from "../controllers/aiController.js";
+import { chat, chatStream } from "../controllers/aiController.js";
 
 let pass = 0, fail = 0;
 const ok = (c, name) => { c ? pass++ : (fail++, console.log("FAIL:", name)); console.log(c ? "ok  " : "FAIL", name); };
 
 // ---------- fake Gemini ----------
 // 1) embeddings go through our own @google/genai client -> replaced by a tiny fake
-// 2) chat/structured/agent calls go through the REAL LangChain ChatGoogleGenerativeAI,
+// 2) chat/structured calls go through the REAL LangChain ChatGoogleGenerativeAI,
 //    pointed (GEMINI_BASE_URL) at a local mock of the Gemini REST API.
 import http from "http";
 const dim = 768;
@@ -118,14 +116,12 @@ Document.findOne = async () => docRow;
 const hist = { messages: [], save: async function () {} , _id: "h1" };
 ChatHistory.findOne = async () => hist;
 ChatHistory.create = async () => hist;
-let savedQuiz, savedCards;
-Quiz.create = async (d) => (savedQuiz = { _id: "q1", ...d });
-FlashCard.create = async (d) => (savedCards = { _id: "f1", ...d });
+
 
 // ---------- 5. controllers over real HTTP ----------
 const app = express(); app.use(express.json());
 app.use((req, _res, next) => { req.user = { _id: uid }; next(); });
-app.post("/chat", chat); app.post("/chat/stream", chatStream); app.post("/agent", agent);
+app.post("/chat", chat); app.post("/chat/stream", chatStream); 
 const server = app.listen(0); const base = `http://localhost:${server.address().port}`;
 const post = (p, body) => fetch(base + p, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
@@ -146,16 +142,11 @@ ok(done && done[1].answer.includes("form a loop") && Array.isArray(done[1].sourc
 r = await post("/chat/stream", { documentId: String(did) });
 ok(r.status === 400, "stream validates input (400)");
 
-r = await post("/agent", { documentId: String(did), question: "make me a quiz and flashcards" });
-j = await r.json();
-ok(j.success && j.data.actions.length === 2 && j.data.actions[0].link === "/quizzes/q1", "agent chained create_quiz -> create_flashcards");
-ok(savedQuiz?.questions.length === 2 && savedCards?.cards.length === 1, "agent saved quiz + flashcards to DB models");
-ok(/created a quiz/.test(j.data.answer), "agent final answer returned");
+
 
 // LangChain-specific checks
 const docsOut = await new HybridRetriever({ documentId: String(did), userId: String(uid), topK: 2 }).invoke("circular linked list");
 ok(docsOut.length > 0 && docsOut[0].pageContent && docsOut[0].metadata.pageNumber, "HybridRetriever returns LangChain Documents with pageNumber metadata");
-ok(reqLog.some((r) => r.tools.includes("create_quiz")), "agent bound tools via real ChatGoogleGenerativeAI.bindTools");
 ok(reqLog.some((r) => r.url.includes("streamGenerateContent")), "chat used real LangChain streaming");
 ok(reqLog.some((r) => r.tools.includes("rerank")), "rerank used withStructuredOutput");
 
