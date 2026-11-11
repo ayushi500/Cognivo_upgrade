@@ -218,7 +218,7 @@ const makeCacheLookup = (req, documentId, question) => async ({ isFollowUp }) =>
 };
 
 const saveConversation = async (chatHistory, question, result) => {
-  const chunkIndices = (result.chunks || []).map((c) => c.chunkIndex);
+  const chunkIndices = result.fromCache? result.cachedData?.relevantChunks || []: (result.chunks || []).map((c) => c.chunkIndex);
   chatHistory.messages.push(
     { role: "user", content: question, timestamp: new Date(), relevantChunks: [] },
     { role: "assistant", content: result.answer, timestamp: new Date(), relevantChunks: chunkIndices }
@@ -400,7 +400,7 @@ export const explainConcept=async(req,res,next)=>{
 }
 
 //desc  Get chatHistory for a document
-//route GET /api/ai/generate-flashhcards
+//route GET /api/ai/get-chat-history/:documentId
 // access Private
 export const getChatHistory=async(req,res,next)=>{
     try {
