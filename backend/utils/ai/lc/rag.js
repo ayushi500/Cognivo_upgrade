@@ -225,7 +225,35 @@ export const runRagPipeline = async ({
   signal,
   cacheLookup,
 }) => {
+     // Fast cache path for new conversations (no history).
+  // Avoid Gemini query rewriting when the question is already standalone.
+  const contextDependentPattern =
+  /\b(it|its|they|them|their|this|that|these|those|he|she|him|her|there|above|previous|earlier|more|again|continue|elaborate|further|also|same|such|what about|how about|explain more|tell me more|why is that|which one)\b/i;
+console.log("[DEBUG] question:", question);
+console.log("[DEBUG] cacheLookup type:", typeof cacheLookup);
+const cacheCheckedEarly = Boolean(cacheLookup);
 
+console.log("[DEBUG] cacheCheckedEarly:", cacheCheckedEarly);
+  console.log("[DEBUG] cacheCheckedEarly:", cacheCheckedEarly);
+ if (cacheCheckedEarly) {
+    const cacheStart = Date.now();
+    const earlyCached = await cacheLookup({
+      isFollowUp: false,
+      searchQuery: question,
+    });
+console.log("[TIMING] early cacheLookup:", Date.now() - cacheStart, "ms");
+    if (earlyCached) {
+      return {
+        answer: earlyCached.answer || "",
+        sources: earlyCached.sources || [],
+        chunks: [],
+        searchQuery: question,
+        isFollowUp: false,
+        ...earlyCached,
+        fromCache: true,
+      };
+    }
+  }
   // ================================================================
   // STEP 1 — REWRITE
   // ================================================================
@@ -249,13 +277,11 @@ export const runRagPipeline = async ({
   let cached = null;
 
 
-  if (cacheLookup) {
-
+    if (cacheLookup && !cacheCheckedEarly) {
     cached = await cacheLookup({
       isFollowUp,
       searchQuery,
     });
-
   }
 
 
@@ -430,4 +456,6 @@ export const runRagPipeline = async ({
     isFollowUp,
   };
 };
+
+
 

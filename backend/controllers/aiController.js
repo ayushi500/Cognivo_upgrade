@@ -245,9 +245,15 @@ const cacheResult = async (req, documentId, question, result, data) => {
 //route POST /api/ai/chat
 // access Private
 export const chat = async (req, res, next) => {
+  const t0 = Date.now();
+
   try {
     const ctx = await loadChatContext(req, res);
+    console.log("[TIMING] loadChatContext:", Date.now() - t0, "ms");
+
     if (!ctx) return;
+
+    const t1 = Date.now();
     const { document, chatHistory, question } = ctx;
 
     const result = await runRagPipeline({
@@ -258,20 +264,31 @@ export const chat = async (req, res, next) => {
       cacheLookup: makeCacheLookup(req, document._id, question),
     });
 
+    console.log("[TIMING] runRagPipeline:", Date.now() - t1, "ms");
+
+    const t2 = Date.now();
     const chunkIndices = await saveConversation(chatHistory, question, result);
+    console.log("[TIMING] saveConversation:", Date.now() - t2, "ms");
+
     const data = buildResponseData(question, result, chunkIndices, chatHistory);
+
+    const t3 = Date.now();
     await cacheResult(req, document._id, question, result, data);
+    console.log("[TIMING] cacheResult:", Date.now() - t3, "ms");
+
+    console.log("[TIMING] TOTAL:", Date.now() - t0, "ms");
 
     res.status(200).json({
       success: true,
       data,
-      message: result.fromCache ? "Response retrieved from cache" : "Response generated Successfully",
+      message: result.fromCache
+        ? "Response retrieved from cache"
+        : "Response generated Successfully",
     });
   } catch (error) {
     next(error);
   }
 };
-
 //desc  Chat with document - streamed token by token (Server-Sent Events)
 //route POST /api/ai/chat/stream
 // access Private

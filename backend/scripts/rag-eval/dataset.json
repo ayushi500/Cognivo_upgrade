@@ -1,0 +1,237 @@
+{
+  "_note": "AUTO-DRAFTED; manually review every question/gold page",
+  "documentId": "6ac765f214fdcc9283323e8a",
+  "userId": "6ac765b914fdcc9283323e70",
+  "items": [
+    {
+      "id": "q1",
+      "type": "factual",
+      "question": "What project did Ayushi Sharma work on during her internship at SHUBHSHIVALIK PRODUCTS?",
+      "goldPages": [
+        2
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 1
+    },
+    {
+      "id": "q2",
+      "type": "definition",
+      "question": "What is the title of the seminar report and who supervised the work?",
+      "goldPages": [
+        3
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 2
+    },
+    {
+      "id": "q3",
+      "type": "numeric",
+      "question": "Who provided guidance and support for Ayushi Sharma's seminar report preparation?",
+      "goldPages": [
+        4
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 3
+    },
+    {
+      "id": "q4",
+      "type": "why/how",
+      "question": "What is the Terminal Management System (TMS) and what are its key features for controlling IoT devices?",
+      "goldPages": [
+        5
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 4
+    },
+    {
+      "id": "q5",
+      "type": "comparison",
+      "question": "What technologies were utilized in the development of the Terminal Management System (TMS) platform for IoT device management?",
+      "goldPages": [
+        11
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 10
+    },
+    {
+      "id": "q6",
+      "type": "factual",
+      "question": "What technologies were utilized in the creation of the TMS platform and what was the author's responsibility regarding it?",
+      "goldPages": [
+        11
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 11
+    },
+    {
+      "id": "q7",
+      "type": "definition",
+      "question": "What are the four common challenges organizations encounter when managing distributed IoT devices?",
+      "goldPages": [
+        11
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 12
+    },
+    {
+      "id": "q8",
+      "type": "numeric",
+      "question": "What are the main goals of the seminar report and project work concerning the IoT device management platform?",
+      "goldPages": [
+        12
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 13
+    },
+    {
+      "id": "q9",
+      "type": "why/how",
+      "question": "Could you outline the structure of this report and the key topics covered in each chapter?",
+      "goldPages": [
+        12
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 15
+    },
+    {
+      "id": "q10",
+      "type": "comparison",
+      "question": "What are the key components and functionalities of an IoT device management platform, and how does TMS implement these features?",
+      "goldPages": [
+        13
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 16
+    },
+    {
+      "id": "q11",
+      "type": "factual",
+      "question": "How does MQTT's publish-subscribe model facilitate communication between devices in an IoT environment, and what are the implications of its different Quality of Service (QoS) levels for message delivery?",
+      "goldPages": [
+        13
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 17
+    },
+    {
+      "id": "q12",
+      "type": "definition",
+      "question": "How do WebSockets enable real-time updates in web applications, and why might they be preferred over MQTT for handling numerous simultaneous dashboard users?",
+      "goldPages": [
+        13
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 18
+    },
+    {
+      "id": "q13",
+      "type": "numeric",
+      "question": "What are the four JavaScript technologies that comprise the MERN stack and what is the primary role of each in building web applications?",
+      "goldPages": [
+        14
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 20
+    },
+    {
+      "id": "q14",
+      "type": "why/how",
+      "question": "How does Docker Compose facilitate the management of multi-service applications like TMS by defining and orchestrating multiple containers?",
+      "goldPages": [
+        14
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 21
+    },
+    {
+      "id": "q15",
+      "type": "comparison",
+      "question": "What technologies are used in the TMS system, and what is the role of Docker Compose?",
+      "goldPages": [
+        15
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 22
+    },
+    {
+      "id": "q16",
+      "type": "factual",
+      "question": "What are the four main functional areas that comprise the TMS system and what are their purposes?",
+      "goldPages": [
+        16
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 23
+    },
+    {
+      "id": "q17",
+      "type": "numeric",
+      "question": "What information is stored about the user who sent a command?",
+      "goldPages": [
+        17
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 27
+    },
+    {
+      "id": "q18",
+      "type": "why/how",
+      "question": "How does the Device schema manage the storage of sensor readings to prevent unbounded growth, and what is done for longer-term data analysis?",
+      "goldPages": [
+        17
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 28
+    },
+    {
+      "id": "q19",
+      "type": "comparison",
+      "question": "How does separating the MQTT and Socket.IO channels in the real-time communication design improve system reliability?",
+      "goldPages": [
+        18
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 29
+    },
+    {
+      "id": "q20",
+      "type": "factual",
+      "question": "How does the system ensure that only authenticated users can establish WebSocket connections and how are passwords secured during the authentication process?",
+      "goldPages": [
+        19
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 31
+    },
+    {
+      "id": "q21",
+      "type": "definition",
+      "question": "How does the alerting subsystem prevent alert floods from minor sensor value fluctuations?",
+      "goldPages": [
+        19
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 32
+    },
+    {
+      "id": "q22",
+      "type": "numeric",
+      "question": "What technologies are utilized in the frontend and backend of the TMS system, and what infrastructure components support its operation?",
+      "goldPages": [
+        20
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 33
+    },
+    {
+      "id": "q23",
+      "type": "why/how",
+      "question": "How does the backend server manage incoming MQTT messages, and what actions does it take based on the message type?",
+      "goldPages": [
+        20
+      ],
+      "mustContain": [],
+      "sourceChunkIndex": 34
+    }
+  ]
+}

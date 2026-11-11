@@ -130,32 +130,93 @@ export const hybridSearch = async ({
 }) => {
   if (!query || !documentId || !userId) return [];
 
+
   onStep?.("Searching the document…");
+
+  const profile = process.env.PROFILE_RAG === "1";
+  const started = performance.now();
+  const timings = {};
+
+  let t = performance.now();
   const chunks = await loadChunks(documentId, userId);
+  timings.loadChunks = performance.now() - t;
+
   if (!chunks.length) return [];
 
+  t = performance.now();
   const queryVector = await embedText(query);
+  timings.embedQuery = performance.now() - t;
+
+  const vectorStart = performance.now();
+  const keywordStart = performance.now();
+
   const [semantic, keyword] = await Promise.all([
-    vectorCandidates(queryVector, documentId, userId, 20),
-    Promise.resolve(bm25Rank(query, chunks.map((c) => ({ ...c, content: c.heading ? `${c.heading} ${c.content}` : c.content })), { limit: 20 })).then(
-      // restore the original chunk text (heading was only prepended for scoring)
-      (rows) => rows.map((r) => ({ ...chunks.find((c) => c.chunkIndex === r.chunkIndex), keywordScore: r.keywordScore }))
-    ),
+    (async () => {
+      const result = await vectorCandidates(
+        queryVector, documentId, userId, 20
+      );
+      timings.vectorSearch = performance.now() - vectorStart;
+      return result;
+    })(),
+
+    (async () => {
+      const rows = bm25Rank(
+        query,
+        chunks.map((c) => ({
+          ...c,
+          content: c.heading ? `${c.heading} ${c.content}` : c.content,
+        })),
+        { limit: 20 }
+      );
+
+      const result = rows.map((r) => ({
+        ...chunks.find((c) => c.chunkIndex === r.chunkIndex),
+        keywordScore: r.keywordScore,
+      }));
+
+      timings.bm25 = performance.now() - keywordStart;
+      return result;
+    })(),
   ]);
 
-  const fused = reciprocalRankFusion([semantic, keyword]).slice(0, candidates);
+  t = performance.now();
+  const fused = reciprocalRankFusion([semantic, keyword])
+    .slice(0, candidates);
+  timings.rrf = performance.now() - t;
+
+
+
   let final = fused;
 
   if (rerank && fused.length > topK) {
     try {
       onStep?.("Re-ranking the best passages…");
+      const rerankStart = performance.now();
+
       const scored = await rerankWithGemini(query, fused);
+
+      timings.rerank = performance.now() - rerankStart;
       final = scored.sort((a, b) => b.rerankScore - a.rerankScore || b.rrfScore - a.rrfScore);
     } catch (error) {
       console.warn("Rerank skipped:", error.message);
     }
   }
 
+  if (profile) {
+    timings.total = performance.now() - started;
+
+    console.log(
+      "[RAG_PROFILE]",
+      JSON.stringify({
+        ...timings,
+        chunks: chunks.length,
+        semanticCandidates: semantic.length,
+        keywordCandidates: keyword.length,
+        fusedCandidates: fused.length,
+        rerankEnabled: rerank,
+      })
+    );
+  }
   return final.slice(0, topK).map((c) => ({
     _id: c._id,
     content: c.content,
