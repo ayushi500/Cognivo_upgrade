@@ -1,0 +1,8 @@
+{
+  "_note": "Review questions and goldPages manually; this is an example, not measured data.",
+  "documentId": "YOUR_DOCUMENT_ID",
+  "userId": "YOUR_USER_ID",
+  "items": [
+    {"id":"q1","type":"definition","question":"What is ...?","goldPages":[1],"mustContain":[]}
+  ]
+}
