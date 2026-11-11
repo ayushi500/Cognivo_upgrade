@@ -137,3 +137,6 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Generated RAG evaluation reports (keep local)
+backend/scripts/rag-eval/results/

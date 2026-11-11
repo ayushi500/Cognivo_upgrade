@@ -1,0 +1,2 @@
+import assert from "node:assert/strict";import {metrics,mean,percentile} from "./core.mjs";
+const chunks=[1,2,3].map(pageNumber=>({pageNumber,content:"topic "+pageNumber}));const m=metrics([chunks[0],chunks[2]],{goldPages:[3]},chunks,[1,2]);assert.equal(m.mrr,.5);assert.equal(m.atK[1].hit,0);assert.equal(m.atK[2].hit,1);assert.equal(mean([1,3]),2);assert.equal(percentile([10,20,30,40],95),40);console.log("RAG eval selftest OK");
